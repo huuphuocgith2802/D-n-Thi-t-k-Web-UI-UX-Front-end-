@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Enrollment - Cổng Đăng ký Môn học Thông minh</title>
+  
+  <!-- Google Fonts Preconnect & Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- Core & Shared Stylesheet -->
+  <link rel="stylesheet" href="css/base.css">
+  <!-- Feature-specific Stylesheet (Được phát triển bởi Thành viên phụ trách Đăng ký môn) -->
+  <link rel="stylesheet" href="css/enrollment.css">
+
+  <!-- Core Scripts with defer -->
+  <script defer src="js/storage.js"></script>
+  <script defer src="js/search.js"></script>
+  <script defer src="js/cart.js"></script>
+</head>
+<body>
+
+  <!-- ======================================================================
+       HEADER & NAVIGATION
+       ====================================================================== -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="brand-logo" aria-label="Smart Enrollment Trang chủ">
+        <div class="logo-icon">SE</div>
+        <span>Smart Enrollment</span>
+        <span class="brand-badge">CNTT 2026</span>
+      </a>
+
+      <!-- 3 Primary Navigation Links -->
+      <nav class="main-nav" aria-label="Điều hướng chính">
+        <a href="index.html" class="nav-link active" aria-current="page">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+          Đăng ký môn học
+        </a>
+        <a href="pages/schedule.html" class="nav-link">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+          Thời khóa biểu
+        </a>
+        <a href="pages/checkout.html" class="nav-link">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+          </svg>
+          Thanh toán học phí
+        </a>
+      </nav>
+
+      <div class="header-user-status">
+        <div class="user-avatar" title="Sinh viên">SV</div>
+        <div class="user-info">
+          <div style="font-weight: 600; font-size: 0.8125rem;">Sinh viên CNTT</div>
+          <div style="font-size: 0.75rem; color: var(--color-text-light);">Học kỳ 1 - 2026/2027</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ======================================================================
+       MAIN CONTENT CONTAINER (2-COLUMN LAYOUT)
+       ====================================================================== -->
+  <main class="main-wrapper">
+
+    <!-- Page Banner -->
+    <section class="page-intro-banner">
+      <h1 class="page-intro-title">Cổng Đăng ký Môn học Trực tuyến</h1>
+      <p class="page-intro-desc">
+        Chào mừng sinh viên Khoa Công nghệ Thông tin. Vui lòng tìm kiếm môn học, kiểm tra điều kiện tiên quyết và lịch biểu trước khi đăng ký vào giỏ học phần.
+      </p>
+    </section>
+
+    <div class="layout-two-column">
+
+      <!-- ==================================================================
+           LEFT COLUMN: FORM TÌM KIẾM & DANH SÁCH MÔN HỌC (9-12 MÔN)
+           ================================================================== -->
+      <section class="content-column" aria-labelledby="heading-course-list">
+
+        <!-- Search & Filter Card -->
+        <div class="search-filter-card">
+          <form id="search-form" autocomplete="off" onsubmit="event.preventDefault();">
+            <div class="search-filter-grid">
+              
+              <!-- Search Input Field -->
+              <div class="form-group">
+                <label for="search-input" class="form-label">Tìm kiếm môn học</label>
+                <div class="input-with-icon">
+                  <span class="input-icon" aria-hidden="true">
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                  </span>
+                  <input
+                    type="search"
+                    id="search-input"
+                    class="form-input"
+                    placeholder="Nhập tên môn học hoặc mã môn (VD: IT001, Lập trình, Cơ sở dữ liệu...)"
+                    aria-label="Tìm kiếm theo mã môn hoặc tên môn học"
+                  >
+                </div>
+              </div>
+
+              <!-- Credit Filter Dropdown -->
+              <div class="form-group">
+                <label for="credit-filter" class="form-label">Lọc số tín chỉ</label>
+                <select id="credit-filter" class="form-select" aria-label="Lọc môn học theo số tín chỉ">
+                  <option value="all">Tất cả số tín chỉ</option>
+                  <option value="2">2 Tín chỉ</option>
+                  <option value="3">3 Tín chỉ</option>
+                  <option value="4">4 Tín chỉ</option>
+                </select>
+              </div>
+
+            </div>
+          </form>
+        </div>
+
+        <!-- Course List Header Status -->
+        <div class="panel-header" style="border: none; margin-bottom: var(--spacing-3);">
+          <h2 id="heading-course-list" class="panel-title">
+            Danh mục Môn học Khả dụng
+          </h2>
+          <span class="panel-subtitle">Hiển thị 12 môn học chuyên ngành CNTT</span>
+        </div>
+
+        <!-- Khung vùng thông báo khi không tìm thấy kết quả (#empty-search-msg) -->
+        <div id="empty-search-msg" class="is-hidden" role="status" aria-live="polite">
+          <span class="empty-icon">🔍</span>
+          <h4>Không tìm thấy môn học nào phù hợp</h4>
+          <p>Vui lòng thử tìm kiếm với từ khóa khác hoặc điều chỉnh lại bộ lọc số tín chỉ.</p>
+        </div>
+
+        <!-- Danh sách môn học (#course-list) - 12 Môn học CNTT thực tế với đầy đủ data-* attributes -->
+        <div id="course-list" class="course-list-container">
+
+          <!-- 1. IT001: Nhập môn Lập trình -->
+          <article
+            class="course-card"
+            data-id="IT001"
+            data-name="Nhập môn Lập trình"
+            data-credits="3"
+            data-prereq=""
+            data-schedule="Thứ 2 (Tiết 1-3)"
+            data-fee="1350000"
+          >
+            <div class="course-card-top">
+              <div>
+                <span class="course-id-tag">IT001</span>
+                <h3 class="course-title">Nhập môn Lập trình</h3>
+              </div>
+              <span class="badge" style="background:#eff6ff; color:#2563eb; font-weight:600; padding:4px 8px; border-radius:6px; font-size:0.75rem;">
+                3 Tín chỉ
+              </span>
+            </div>
+
+            <div class="course-card-meta">
+              <div class="meta-item">
+                <span>Môn tiên quyết:</span>
+                <strong>Không</strong>
+              </div>
+              <div class="meta-item">
+                <span>Lịch học:</span>
+                <strong>Thứ 2 (Tiết 1-3)</strong>
+              </div>
+              <div class="meta-item">
+                <span>Địa điểm:</span>
+                <span>Phòng máy A1-201</span>
+              </div>
+            </div>
+
+            <div class="course-card-footer">
+              <div>
+                <span class="course-fee-label">Học phí</span>
+                <span class="course-fee">1.350.000 đ</span>
+              </div>
+              <button type="button" class="btn btn-primary btn-add-course" aria-label="Chọn môn Nhập môn Lập trình">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                </svg>
+                Chọn môn
+              </button>
+            </div>
+          </article>
+
+          <!-- 2. IT002: Kỹ thuật Lập trình -->
+          <article
+            class="course-card"
+            data-id="IT002"
+            data-name="Kỹ thuật Lập trình"
+            data-credits="3"
+            data-prereq="IT001"
+            data-schedule="Thứ 4 (Tiết 4-6)"
+            data-fee="1350000"
+          >
+            <div class="course-card-top">
+              <div>
+                <span class="course-id-tag">IT002</span>
+                <h3 class="course-title">Kỹ thuật Lập trình</h3>
+              </div>
+              <span class="badge" style="background:#eff6ff; color:#2563eb; font-weight:600; padding:4px 8px; border-radius:6px; font-size:0.75rem;">
+                3 Tín chỉ
+              </span>
+            </div>
+
+            <div class="course-card-meta">
+              <div class="meta-item">
+                <span>Môn tiên quyết:</span>
+                <strong style="color: #d97706;">IT001</strong>
+              </div>
+              <div class="meta-item">
+                <span>Lịch học:</span>
+                <strong>Thứ 4 (Tiết 4-6)</strong>
+              </div>
+              <div class="meta-item">
+                <span>Địa điểm:</span>
+                <span>Phòng máy A1-203</span>
+              </div>
+            </div>
+
+            <div class="course-card-footer">
+              <div>
+                <span class="course-fee-label">Học phí</span>
+                <span class="course-fee">1.350.000 đ</span>
+              </div>
+              <button type="button" class="btn btn-primary btn-add-course" aria-label="Chọn môn Kỹ thuật Lập trình">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                </svg>
+                Chọn môn
+              </button>
+            </div>
+          </article>
+
+          <!-- 3. IT003: Cấu trúc Dữ liệu và Giải thuật -->
+          <article
+            class="course-card"
+            data-id="IT003"
+            data-name="Cấu trúc Dữ liệu và Giải thuật"
+            data-credits="4"
+            data-prereq="IT002"
+            data-schedule="Thứ 3 (Tiết 1-4)"
+            data-fee="1800000"
+          >
+            <div class="course-card-top">
+              <div>
+                <span class="course-id-tag">IT003</span>
+                <h3 class="course-title">Cấu trúc Dữ liệu và Giải thuật</h3>
+              </div>
+              <span class="badge" style="background:#ede9fe; color:#6d28d9; font-weight:600; padding:4px 8px; border-radius:6px; font-size:0.75rem;">
+                4 Tín chỉ
+              </span>
+            </div>
+
+            <div class="course-card-meta">
+              <div class="meta-item">
+                <span>Môn tiên quyết:</span>
+                <strong style="color: #d97706;">IT002</strong>
+              </div>
+              <div class="meta-item">
+                <span>Lịch học:</span>
+                <strong>Thứ 3 (Tiết 1-4)</strong>
+              </div>
+              <div class="meta-item">
+                <span>Địa điểm:</span>
+                <span>Giảng đường C-102</span>
+              </div>
+            </div>
+
+            <div class="course-card-footer">
+              <div>
+                <span class="course-fee-label">Học phí</span>
+                <span class="course-fee">1.800.000 đ</span>
+              </div>
+              <button type="button" class="btn btn-primary btn-add-course" aria-label="Chọn môn Cấu trúc Dữ liệu và Giải thuật">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                </svg>
+                Chọn môn
+              </button>
+            </div>
+          </article>
+
+          <!-- 4. IT004: Cơ sở Dữ liệu -->
+          <article
+            class="course-card"
+            data-id="IT004"
+            data-name="Cơ sở Dữ liệu"
+            data-credits="3"
+            data-prereq="IT001"
+            data-schedule="Thứ 5 (Tiết 7-9)"
+            data-fee="1350000"
+          >
+            <div class="course-card-top">
+              <div>
+                <span class="course-id-tag">IT004</span>
+                <h3 class="course-title">Cơ sở Dữ liệu</h3>
+              </div>
+              <span class="badge" style="background:#eff6ff; color:#2563eb; font-weight:600; padding:4px 8px; border-radius:6px; font-size:0.75rem;">
+                3 Tín chỉ
+              </span>
+            </div>
+
+            <div class="course-card-meta">
+              <div class="meta-item">
+                <span>Môn tiên quyết:</span>
+                <strong style="color: #d97706;">IT001</strong>
+              </div>
+              <div class="meta-item">
+                <span>Lịch học:</span>
+                <strong>Thứ 5 (Tiết 7-9)</strong>
+              </div>
+              <div class="meta-item">
+                <span>Địa điểm:</span>
+                <span>Phòng máy B2-304</span>
+              </div>
+            </div>
+
+            <div class="course-card-footer">
+              <div>
+                <span class="course-fee-label">Học phí</span>
+                <span class="course-fee">1.350.000 đ</span>
+              </div>
+              <button type="button" class="btn btn-primary btn-add-course" aria-label="Chọn môn Cơ sở Dữ liệu">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                </svg>
+                Chọn môn
+              </button>
+            </div>
+          </article>
+
+          <!-- 5. IT005: Mạng Máy tính -->
+          <article
+            class="course-card"
+            data-id="IT005"
+            data-name="Mạng Máy tính"
+            data-credits="3"
+            data-prereq=""
+            data-schedule="Thứ 6 (Tiết 1-3)"
+            data-fee="1350000"
+          >
+            <div class="course-card-top">
+              <div>
+                <span class="course-id-tag">IT005</span>
+                <h3 class="course-title">Mạng Máy tính</h3>
+              </div>
+              <span class="badge" style="background:#eff6ff; color:#2563eb; font-weight:600; padding:4px 8px; border-radius:6px; font-size:0.75rem;">
+                3 Tín chỉ
+              </span>
+            </div>
+
+            <div class="course-card-meta">
+              <div class="meta-item">
+                <span>Môn tiên quyết:</span>
+                <strong>Không</strong>
+              </div>
+              <div class="meta-item">
+                <span>Lịch học:</span>
+                <strong>Thứ 6 (Tiết 1-3)</strong>
+              </div>
+              <div class="meta-item">
+                <span>Địa điểm:</span>
+                <span>Phòng Lab Cisco</span>
+              </div>
+            </div>
+
+            <div class="course-card-footer">
+              <div>
+                <span class="course-fee-label">Học phí</span>
+                <span class="course-fee">1.350.000 đ</span>
+              </div>
+              <button type="button" class="btn btn-primary btn-add-course" aria-label="Chọn môn Mạng Máy tính">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                </svg>
+                Chọn môn
+              </button>
+            </div>
+          </article>
+
+          <!-- 6. IT006: Hệ điều hành -->
+          <article
+            class="course-card"
+            data-id="IT006"
+            data-name="Hệ điều hành"
+            data-credits="3"
+            data-prereq="IT001"
+            data-schedule="Thứ 2 (Tiết 7-9)"
+            data-fee="1350000"
+          >
+            <div class="course-card-top">
+              <div>
+                <span class="course-id-tag">IT006</span>
+                <h3 class="course-title">Hệ điều hành</h3>
+              </div>
+              <span class="badge" style="background:#eff6ff; color:#2563eb; font-weight:600; padding:4px 8px; border-radius:6px; font-size:0.75rem;">
+                3 Tín chỉ
+              </span>
+            </div>
+
+            <div class="course-card-meta">
+              <div class="meta-item">
+                <span>Môn tiên quyết:</span>
+                <strong style="color: #d97706;">IT001</strong>
+              </div>
+              <div class="meta-item">
+                <span>Lịch học:</span>
+                <strong>Thứ 2 (Tiết 7-9)</strong>
+              </div>
+              <div class="meta-item">
+                <span>Địa điểm:</span>
+                <span>Giảng đường C-201</span>
+              </div>
+            </div>
+
+            <div class="course-card-footer">
+              <div>
+                <span class="course-fee-label">Học phí</span>
+                <span class="course-fee">1.350.000 đ</span>
+              </div>
+              <button type="button" class="btn btn-primary btn-add-course" aria-label="Chọn môn Hệ điều hành">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                </svg>
+                Chọn môn
+              </button>
+            </div>
+          </article>
+
+          <!-- 7. IT007: Lập trình Web -->
+          <article
+            class="course-card"
+            data-id="IT007"
+            data-name="Lập trình Web"
+            data-credits="3"
+            data-prereq="IT002"
+            data-schedule="Thứ 3 (Tiết 7-9)"
+            data-fee="1350000"
+          >
+            <div class="course-card-top">
+              <div>
+                <span class="course-id-tag">IT007</span>
+                <h3 class="course-title">Lập trình Web</h3>
+              </div>
+              <span class="badge" style="background:#eff6ff; color:#2563eb; font-weight:600; padding:4px 8px; border-radius:6px; font-size:0.75rem;">
+                3 Tín chỉ
+              </span>
+            </div>
+
+            <div class="course-card-meta">
+              <div class="meta-item">
+                <span>Môn tiên quyết:</span>
+                <strong style="color: #d97706;">IT002</strong>
+              </div>
+              <div class="meta-item">
+                <span>Lịch học:</span>
+                <strong>Thứ 3 (Tiết 7-9)</strong>
+              </div>
+              <div class="meta-item">
+                <span>Địa điểm:</span>
+                <span>Phòng máy A1-305</span>
+              </div>
+            </div>
+
+            <div class="course-card-footer">
+              <div>
+                <span class="course-fee-label">Học phí</span>
+                <span class="course-fee">1.350.000 đ</span>
+              </div>
+              <button type="button" class="btn btn-primary btn-add-course" aria-label="Chọn môn Lập trình Web">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                </svg>
+                Chọn môn
+              </button>
+            </div>
+          </article>
+
+          <!-- 8. IT008: Phân tích và Thiết kế Hệ thống -->
+          <article
+            class="course-card"
+            data-id="IT008"
+            data-name="Phân tích và Thiết kế Hệ thống"
+            data-credits="3"
+            data-prereq="IT004"
+            data-schedule="Thứ 4 (Tiết 1-3)"
+            data-fee="1350000"
+          >
+            <div class="course-card-top">
+              <div>
+                <span class="course-id-tag">IT008</span>
+                <h3 class="course-title">Phân tích và Thiết kế Hệ thống</h3>
+              </div>
+              <span class="badge" style="background:#eff6ff; color:#2563eb; font-weight:600; padding:4px 8px; border-radius:6px; font-size:0.75rem;">
+                3 Tín chỉ
+              </span>
+            </div>
+
+            <div class="course-card-meta">
+              <div class="meta-item">
+                <span>Môn tiên quyết:</span>
+                <strong style="color: #d97706;">IT004</strong>
+              </div>
+              <div class="meta-item">
+                <span>Lịch học:</span>
+                <strong>Thứ 4 (Tiết 1-3)</strong>
+              </div>
+              <div class="meta-item">
+                <span>Địa điểm:</span>
+                <span>Giảng đường B-202</span>
+              </div>
+            </div>
+
+            <div class="course-card-footer">
+              <div>
+                <span class="course-fee-label">Học phí</span>
+                <span class="course-fee">1.350.000 đ</span>
+              </div>
+              <button type="button" class="btn btn-primary btn-add-course" aria-label="Chọn môn Phân tích và Thiết kế Hệ thống">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                </svg>
+                Chọn môn
+              </button>
+            </div>
+          </article>
+
+          <!-- 9. IT009: Lập trình Thiết bị Di động -->
+          <article
+            class="course-card"
+            data-id="IT009"
+            data-name="Lập trình Thiết bị Di động"
+            data-credits="3"
+            data-prereq="IT002"
+            data-schedule="Thứ 5 (Tiết 4-6)"
+            data-fee="1350000"
+          >
+            <div class="course-card-top">
+              <div>
+                <span class="course-id-tag">IT009</span>
+                <h3 class="course-title">Lập trình Thiết bị Di động</h3>
+              </div>
+              <span class="badge" style="background:#eff6ff; color:#2563eb; font-weight:600; padding:4px 8px; border-radius:6px; font-size:0.75rem;">
+                3 Tín chỉ
+              </span>
+            </div>
+
+            <div class="course-card-meta">
+              <div class="meta-item">
+                <span>Môn tiên quyết:</span>
+                <strong style="color: #d97706;">IT002</strong>
+              </div>
+              <div class="meta-item">
+                <span>Lịch học:</span>
+                <strong>Thứ 5 (Tiết 4-6)</strong>
+              </div>
+              <div class="meta-item">
+                <span>Địa điểm:</span>
+                <span>Phòng Lab Di động B1-105</span>
+              </div>
+            </div>
+
+            <div class="course-card-footer">
+              <div>
+                <span class="course-fee-label">Học phí</span>
+                <span class="course-fee">1.350.000 đ</span>
+              </div>
+              <button type="button" class="btn btn-primary btn-add-course" aria-label="Chọn môn Lập trình Thiết bị Di động">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                </svg>
+                Chọn môn
+              </button>
+            </div>
+          </article>
+
+          <!-- 10. IT010: Trí tuệ Nhân tạo -->
+          <article
+            class="course-card"
+            data-id="IT010"
+            data-name="Trí tuệ Nhân tạo"
+            data-credits="4"
+            data-prereq="IT003"
+            data-schedule="Thứ 6 (Tiết 7-10)"
+            data-fee="1800000"
+          >
+            <div class="course-card-top">
+              <div>
+                <span class="course-id-tag">IT010</span>
+                <h3 class="course-title">Trí tuệ Nhân tạo</h3>
+              </div>
+              <span class="badge" style="background:#ede9fe; color:#6d28d9; font-weight:600; padding:4px 8px; border-radius:6px; font-size:0.75rem;">
+                4 Tín chỉ
+              </span>
+            </div>
+
+            <div class="course-card-meta">
+              <div class="meta-item">
+                <span>Môn tiên quyết:</span>
+                <strong style="color: #d97706;">IT003</strong>
+              </div>
+              <div class="meta-item">
+                <span>Lịch học:</span>
+                <strong>Thứ 6 (Tiết 7-10)</strong>
+              </div>
+              <div class="meta-item">
+                <span>Địa điểm:</span>
+                <span>Phòng AI & Data Lab</span>
+              </div>
+            </div>
+
+            <div class="course-card-footer">
+              <div>
+                <span class="course-fee-label">Học phí</span>
+                <span class="course-fee">1.800.000 đ</span>
+              </div>
+              <button type="button" class="btn btn-primary btn-add-course" aria-label="Chọn môn Trí tuệ Nhân tạo">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                </svg>
+                Chọn môn
+              </button>
+            </div>
+          </article>
+
+          <!-- 11. IT011: An toàn và Bảo mật Thông tin -->
+          <article
+            class="course-card"
+            data-id="IT011"
+            data-name="An toàn và Bảo mật Thông tin"
+            data-credits="3"
+            data-prereq="IT005"
+            data-schedule="Thứ 7 (Tiết 1-3)"
+            data-fee="1350000"
+          >
+            <div class="course-card-top">
+              <div>
+                <span class="course-id-tag">IT011</span>
+                <h3 class="course-title">An toàn và Bảo mật Thông tin</h3>
+              </div>
+              <span class="badge" style="background:#eff6ff; color:#2563eb; font-weight:600; padding:4px 8px; border-radius:6px; font-size:0.75rem;">
+                3 Tín chỉ
+              </span>
+            </div>
+
+            <div class="course-card-meta">
+              <div class="meta-item">
+                <span>Môn tiên quyết:</span>
+                <strong style="color: #d97706;">IT005</strong>
+              </div>
+              <div class="meta-item">
+                <span>Lịch học:</span>
+                <strong>Thứ 7 (Tiết 1-3)</strong>
+              </div>
+              <div class="meta-item">
+                <span>Địa điểm:</span>
+                <span>Phòng CyberSecurity Lab</span>
+              </div>
+            </div>
+
+            <div class="course-card-footer">
+              <div>
+                <span class="course-fee-label">Học phí</span>
+                <span class="course-fee">1.350.000 đ</span>
+              </div>
+              <button type="button" class="btn btn-primary btn-add-course" aria-label="Chọn môn An toàn và Bảo mật Thông tin">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                </svg>
+                Chọn môn
+              </button>
+            </div>
+          </article>
+
+          <!-- 12. IT012: Điện toán Đám mây -->
+          <article
+            class="course-card"
+            data-id="IT012"
+            data-name="Điện toán Đám mây"
+            data-credits="2"
+            data-prereq="IT005"
+            data-schedule="Thứ 7 (Tiết 4-5)"
+            data-fee="900000"
+          >
+            <div class="course-card-top">
+              <div>
+                <span class="course-id-tag">IT012</span>
+                <h3 class="course-title">Điện toán Đám mây</h3>
+              </div>
+              <span class="badge" style="background:#f0fdf4; color:#15803d; font-weight:600; padding:4px 8px; border-radius:6px; font-size:0.75rem;">
+                2 Tín chỉ
+              </span>
+            </div>
+
+            <div class="course-card-meta">
+              <div class="meta-item">
+                <span>Môn tiên quyết:</span>
+                <strong style="color: #d97706;">IT005</strong>
+              </div>
+              <div class="meta-item">
+                <span>Lịch học:</span>
+                <strong>Thứ 7 (Tiết 4-5)</strong>
+              </div>
+              <div class="meta-item">
+                <span>Địa điểm:</span>
+                <span>Giảng đường C-303</span>
+              </div>
+            </div>
+
+            <div class="course-card-footer">
+              <div>
+                <span class="course-fee-label">Học phí</span>
+                <span class="course-fee">900.000 đ</span>
+              </div>
+              <button type="button" class="btn btn-primary btn-add-course" aria-label="Chọn môn Điện toán Đám mây">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                </svg>
+                Chọn môn
+              </button>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           RIGHT COLUMN: GIỎ HÀNG MÔN HỌC ĐÃ CHỌN & TIẾN ĐỘ TÍN CHỈ
+           ================================================================== -->
+      <aside class="sidebar-column" aria-label="Giỏ hàng môn học đã chọn">
+        <div class="cart-card">
+          
+          <div class="panel-header" style="margin-bottom: var(--spacing-3); padding-bottom: var(--spacing-3);">
+            <h2 class="panel-title" style="font-size: var(--font-size-base);">
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="color: var(--color-primary);">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+              </svg>
+              Môn học đã chọn
+            </h2>
+            <button
+              type="button"
+              id="btn-clear-cart"
+              class="btn btn-sm btn-danger-outline"
+              title="Xóa toàn bộ môn học trong giỏ"
+            >
+              Xóa tất cả
+            </button>
+          </div>
+
+          <!-- Bảng danh sách môn học đã chọn -->
+          <div class="table-responsive">
+            <table id="selected-courses-table">
+              <thead>
+                <tr>
+                  <th scope="col">Mã môn</th>
+                  <th scope="col">Tên môn</th>
+                  <th scope="col" style="text-align: center;">Tín chỉ</th>
+                  <th scope="col" style="text-align: center;">Xóa</th>
+                </tr>
+              </thead>
+              <tbody id="selected-courses-body">
+                <!-- Nội dung được kết xuất động bởi js/cart.js -->
+                <tr id="cart-empty-row">
+                  <td colspan="4" style="text-align: center; color: var(--color-text-light); padding: var(--spacing-6) var(--spacing-2);">
+                    Chưa có môn học nào trong giỏ đăng ký.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Khối tóm tắt tín chỉ & Tiến độ -->
+          <div class="cart-summary-box">
+            
+            <div class="credit-info-row">
+              <span style="font-weight: 500; color: var(--color-text-muted);">Tổng số tín chỉ:</span>
+              <span class="credit-number">
+                <span id="total-credits">0</span> / 24 TC
+              </span>
+            </div>
+
+            <!-- Thanh tiến độ tín chỉ -->
+            <div class="credit-progress-wrapper">
+              <div class="progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="24" aria-label="Tiến độ tín chỉ đăng ký">
+                <div id="credit-progress"></div>
+              </div>
+            </div>
+
+            <div class="credit-info-row" style="margin-top: var(--spacing-1);">
+              <span style="font-size: var(--font-size-xs); color: var(--color-text-muted);">Trạng thái đăng ký:</span>
+              <span id="credit-status" class="credit-status-badge" style="background:#f1f5f9; color:#475569;">
+                Chưa đủ tín chỉ tối thiểu (0/12)
+              </span>
+            </div>
+
+          </div>
+
+          <!-- Quick Navigation Actions -->
+          <div class="cart-actions">
+            <a href="pages/schedule.html" class="btn btn-primary" style="font-size: var(--font-size-xs); text-align: center;">
+              Xem TKB tuần &rarr;
+            </a>
+            <a href="pages/checkout.html" class="btn" style="background-color: var(--color-accent); color: white; font-size: var(--font-size-xs); text-align: center;">
+              Thanh toán &rarr;
+            </a>
+          </div>
+
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- ======================================================================
+       TOAST NOTIFICATION CONTAINER (Góc màn hình)
+       ====================================================================== -->
+  <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- ======================================================================
+       FOOTER
+       ====================================================================== -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div>
+        <strong>Smart Enrollment Project &copy; 2026</strong> &mdash; Dự án môn Thiết kế Web
+      </div>
+      <div class="footer-links">
+        <a href="index.html">Đăng ký môn học</a>
+        <span>&bull;</span>
+        <a href="pages/schedule.html">Thời khóa biểu</a>
+        <span>&bull;</span>
+        <a href="pages/checkout.html">Thanh toán học phí</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
