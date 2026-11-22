@@ -1,0 +1,550 @@
+/* ==========================================================================
+   SMART ENROLLMENT - ENROLLMENT & CART STYLES (css/enrollment.css)
+   Cổng Đăng ký Môn học Thông minh - Đồ án môn Thiết kế Web
+   Thành viên phụ trách: Nguyễn Tấn Điền (nhánh feature/Dien)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. HIỆU ỨNG THẺ MÔN HỌC (.course-card) & NÚT HÀNH ĐỘNG
+   -------------------------------------------------------------------------- */
+.course-card {
+  position: relative;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 0.25s ease;
+  overflow: hidden;
+}
+
+/* Hiệu ứng Hover nâng khối và viền sáng nổi bật */
+.course-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-primary);
+  box-shadow: 0 12px 24px -4px rgba(37, 99, 235, 0.12),
+              0 4px 6px -2px rgba(0, 0, 0, 0.05),
+              0 0 0 1px rgba(37, 99, 235, 0.15);
+}
+
+.course-card:hover .course-title {
+  color: var(--color-primary);
+  transition: color var(--transition-fast);
+}
+
+/* Trạng thái môn học ĐÃ ĐƯỢC CHỌN (.is-selected) */
+.course-card.is-selected {
+  border: 1.5px solid var(--color-primary);
+  border-left: 5px solid var(--color-primary);
+  background: linear-gradient(135deg, rgba(239, 246, 255, 0.6) 0%, var(--color-surface) 60%);
+  box-shadow: 0 4px 12px -2px rgba(37, 99, 235, 0.08);
+}
+
+.course-card.is-selected::after {
+  content: "Đã chọn";
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 0.6875rem;
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background-color: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Nút chọn môn (.btn-add-course) */
+.btn-add-course {
+  position: relative;
+  overflow: hidden;
+  font-weight: var(--font-weight-semibold);
+  transition: all var(--transition-fast);
+}
+
+.btn-add-course:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}
+
+.btn-add-course:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Trạng thái nút khi môn đã được chọn vào giỏ */
+.btn-add-course:disabled,
+.btn-add-course.is-added {
+  background-color: #ecfdf5 !important;
+  color: #059669 !important;
+  border: 1px solid #10b981 !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+  cursor: default !important;
+  transform: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   2. BẢNG DANH SÁCH MÔN ĐÃ CHỌN (#selected-courses-table)
+   -------------------------------------------------------------------------- */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Tùy biến thanh cuộn ngang của bảng */
+.table-responsive::-webkit-scrollbar {
+  height: 6px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+  background: var(--color-surface-muted);
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background: var(--color-border-hover);
+  border-radius: 3px;
+}
+
+#selected-courses-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--font-size-xs);
+  text-align: left;
+}
+
+#selected-courses-table th {
+  background-color: var(--color-surface-muted);
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.6875rem;
+  padding: 10px 12px;
+  border-bottom: 1.5px solid var(--color-border);
+  white-space: nowrap;
+}
+
+#selected-courses-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+  background-color: var(--color-surface);
+  transition: background-color var(--transition-fast);
+}
+
+#selected-courses-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+#selected-courses-table tbody tr:hover td {
+  background-color: rgba(241, 245, 249, 0.7);
+}
+
+/* Hiệu ứng xuất hiện dòng mới trong bảng */
+#selected-courses-body tr:not(#cart-empty-row) {
+  animation: tableRowFadeIn 0.3s ease-out;
+}
+
+@keyframes tableRowFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Badge mã môn trong bảng */
+.course-code-badge {
+  font-family: var(--font-family-mono);
+  font-weight: var(--font-weight-bold);
+  font-size: 0.6875rem;
+  color: var(--color-primary);
+  background-color: var(--color-primary-light);
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Tiêu đề môn trong bảng */
+.selected-course-title {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-main);
+  line-height: 1.3;
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.selected-course-schedule {
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+/* Badge số tín chỉ */
+.badge-credit {
+  font-family: var(--font-family-sans);
+  font-weight: var(--font-weight-semibold);
+  font-size: 0.6875rem;
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
+  background-color: #ede9fe;
+  color: #6d28d9;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Nút xóa từng môn khỏi bảng (.btn-remove-course) */
+.btn-remove-course {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  color: var(--color-danger);
+  background-color: transparent;
+  border: 1px solid transparent;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.btn-remove-course:hover {
+  background-color: var(--color-danger-light);
+  border-color: rgba(239, 68, 68, 0.2);
+  color: var(--color-danger-hover);
+  transform: scale(1.08);
+}
+
+.btn-remove-course:active {
+  transform: scale(0.95);
+}
+
+/* Dòng rỗng khi chưa chọn môn (#cart-empty-row) */
+#cart-empty-row td {
+  padding: var(--spacing-8) var(--spacing-4);
+  text-align: center;
+  color: var(--color-text-light);
+  font-style: italic;
+  background-color: var(--color-surface);
+}
+
+/* --------------------------------------------------------------------------
+   3. THANH TIẾN ĐỘ TÍN CHỈ VÀ TRẠNG THÁI (#credit-progress, #credit-status)
+   -------------------------------------------------------------------------- */
+.progress-track {
+  position: relative;
+  background-color: #e2e8f0;
+  border-radius: var(--radius-full);
+  height: 10px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+#credit-progress {
+  height: 100%;
+  width: 0%;
+  border-radius: var(--radius-full);
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              background 0.3s ease,
+              box-shadow 0.3s ease;
+}
+
+/* Trạng thái 1: Bình thường (< 18 tín chỉ) */
+#credit-progress.progress-normal {
+  background: linear-gradient(90deg, #2563eb, #3b82f6);
+  box-shadow: 0 0 6px rgba(37, 99, 235, 0.3);
+}
+
+/* Trạng thái 2: Cảnh báo vàng (>= 18 tín chỉ) */
+#credit-progress.progress-warning {
+  background: linear-gradient(90deg, #f59e0b, #d97706);
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.45);
+}
+
+/* Trạng thái 3: Đỏ khi chạm trần tối đa (>= 24-25 tín chỉ) */
+#credit-progress.progress-danger {
+  background: linear-gradient(90deg, #ef4444, #dc2626);
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
+  animation: pulseDanger 1.5s infinite;
+}
+
+@keyframes pulseDanger {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 14px rgba(239, 68, 68, 0.85);
+  }
+}
+
+/* Tinh chỉnh nhãn trạng thái đăng ký (#credit-status) */
+.credit-status-badge {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all var(--transition-fast);
+}
+
+.credit-status-badge.status-below-min {
+  background-color: #fffbeb !important;
+  color: #b45309 !important;
+  border: 1px solid #fde68a;
+}
+
+.credit-status-badge.status-valid {
+  background-color: #ecfdf5 !important;
+  color: #047857 !important;
+  border: 1px solid #a7f3d0;
+}
+
+.credit-status-badge.status-warning {
+  background-color: #fff7ed !important;
+  color: #c2410c !important;
+  border: 1px solid #fed7aa;
+}
+
+.credit-status-badge.status-danger {
+  background-color: #fef2f2 !important;
+  color: #b91c1c !important;
+  border: 1px solid #fecaca;
+  font-weight: var(--font-weight-semibold);
+}
+
+/* --------------------------------------------------------------------------
+   4. TOAST NOTIFICATION CONTAINER & CARDS (#toast-container, .toast)
+   -------------------------------------------------------------------------- */
+#toast-container {
+  position: fixed;
+  bottom: var(--spacing-6);
+  right: var(--spacing-6);
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  pointer-events: none;
+  max-width: 420px;
+  width: calc(100vw - 32px);
+}
+
+.toast {
+  pointer-events: auto;
+  position: relative;
+  overflow: hidden;
+  min-width: 280px;
+  max-width: 400px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12),
+              0 8px 10px -6px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-3);
+  animation: toastSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: opacity 0.25s ease, transform 0.25s ease, max-height 0.25s ease;
+}
+
+.toast.toast-hiding {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Các phân loại Toast */
+.toast-success {
+  border-left: 4px solid var(--color-success);
+}
+.toast-success .toast-icon {
+  color: var(--color-success);
+}
+
+.toast-warning {
+  border-left: 4px solid var(--color-warning);
+}
+.toast-warning .toast-icon {
+  color: var(--color-warning);
+}
+
+.toast-error,
+.toast-danger {
+  border-left: 4px solid var(--color-danger);
+}
+.toast-error .toast-icon,
+.toast-danger .toast-icon {
+  color: var(--color-danger);
+}
+
+.toast-info {
+  border-left: 4px solid var(--color-info);
+}
+.toast-info .toast-icon {
+  color: var(--color-info);
+}
+
+.toast-icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.toast-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.toast-title {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-main);
+  margin-bottom: 2px;
+}
+
+.toast-message {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.toast-close {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: var(--color-text-light);
+  cursor: pointer;
+  padding: 2px;
+  line-height: 1;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.toast-close:hover {
+  color: var(--color-text-main);
+  background-color: var(--color-surface-muted);
+}
+
+/* Thanh thời gian tự hủy Toast (Progress bar countdown) */
+.toast-timer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background-color: currentColor;
+  opacity: 0.25;
+  width: 100%;
+  transform-origin: left;
+  animation: toastCountdown linear forwards;
+}
+
+@keyframes toastCountdown {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   5. RESPONSIVE DESIGN (TABLET & MOBILE)
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .layout-two-column {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-6);
+  }
+
+  .sidebar-column {
+    position: static;
+    top: auto;
+  }
+
+  .cart-card {
+    box-shadow: var(--shadow-md);
+  }
+}
+
+@media (max-width: 768px) {
+  #toast-container {
+    left: var(--spacing-4);
+    right: var(--spacing-4);
+    bottom: var(--spacing-4);
+    max-width: 100%;
+    width: auto;
+  }
+
+  .toast {
+    max-width: 100%;
+    min-width: auto;
+  }
+
+  .table-responsive {
+    border-radius: var(--radius-md);
+  }
+
+  #selected-courses-table th,
+  #selected-courses-table td {
+    padding: 8px 10px;
+    font-size: 0.6875rem;
+  }
+
+  .selected-course-title {
+    max-width: 120px;
+  }
+
+  .cart-summary-box {
+    padding: var(--spacing-3);
+  }
+
+  .credit-number {
+    font-size: var(--font-size-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .selected-course-title {
+    max-width: 95px;
+  }
+
+  #selected-courses-table th,
+  #selected-courses-table td {
+    padding: 6px 8px;
+  }
+
+  .btn-remove-course {
+    width: 24px;
+    height: 24px;
+  }
+}
